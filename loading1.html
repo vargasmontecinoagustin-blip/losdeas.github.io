@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cargando...</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    height: 100vh; overflow: hidden; color: #fff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    /* Cambiá esta imagen por la tuya (subila a un hosting con https) */
+    background: #1b1d23 url("https://i.imgur.com/TU_FONDO.jpg") center/cover no-repeat;
+  }
+  .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.55); }
+  .content { position: relative; z-index: 1; height: 100%; display: flex;
+             flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+  h1 { font-size: 3.2rem; margin-bottom: 8px; }
+  .sub { font-size: 1.2rem; opacity: .85; margin-bottom: 40px; }
+  .info { display: flex; gap: 30px; margin-bottom: 30px; font-size: 1rem; opacity: .9; }
+  .bar { width: 60%; max-width: 700px; height: 14px; background: rgba(255,255,255,.2); border-radius: 8px; overflow: hidden; }
+  .fill { height: 100%; width: 0%; background: #7289da; transition: width .3s; }
+  #status { margin-top: 14px; font-size: .95rem; opacity: .8; }
+  .rules { position: absolute; bottom: 30px; font-size: .9rem; opacity: .8; }
+</style>
+</head>
+<body>
+<div class="overlay"></div>
+<div class="content">
+  <h1 id="name">¡Bienvenido!</h1>
+  <div class="sub">Los Deas Sandbox · Discord: discord.gg/EHquPRCtzu</div>
+
+  <div class="info">
+    <span>Mapa: <b id="map">-</b></span>
+    <span>Jugadores: <b id="max">-</b></span>
+  </div>
+
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div id="status">Conectando...</div>
+
+  <div class="rules">Respetá a los demás · No spamees props · Esta restringido el uso de cualquier tipo de exploit</div>
+</div>
+
+<script>
+  var total = 0, needed = 0;
+
+  // GMod llama a estas funciones automáticamente
+  function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+    document.getElementById("name").textContent = servername;
+    document.getElementById("map").textContent = mapname;
+    document.getElementById("max").textContent = maxplayers;
+  }
+
+  function SetFilesTotal(t) { total = t; update(); }
+  function SetFilesNeeded(n) { needed = n; update(); }
+
+  function update() {
+    if (!total) return;
+    var pct = Math.min(100, Math.round(((total - needed) / total) * 100));
+    document.getElementById("fill").style.width = pct + "%";
+  }
+
+  function SetStatusChanged(status) {
+    document.getElementById("status").textContent = status;
+  }
+
+  function DownloadingFile(fileName) {
+    document.getElementById("status").textContent = "Descargando: " + fileName;
+  }
+</script>
+</body>
+</html>
